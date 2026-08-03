@@ -25,6 +25,7 @@ import {
   Copy,
   Check,
   ExternalLink,
+  Shield,
   FileCode,
   AlertTriangle,
   Lightbulb,
@@ -149,10 +150,14 @@ export default function App() {
     const handleHashChange = () => {
       const fullHash = window.location.hash.replace('#/', '').replace('#', '');
       const parts = fullHash.split('#');
-      const docId = parts[0] || 'introduction';
+      const docId = parts[0] || '';
       const anchor = parts[1] || '';
 
-      if (docsContent[docId]) {
+      if (docId === '' || docId === 'home') {
+        setCurrentDocId('home');
+        setIsMobileMenuOpen(false);
+        window.scrollTo({ top: 0 });
+      } else if (docsContent[docId]) {
         setCurrentDocId(docId);
         setIsMobileMenuOpen(false);
         
@@ -167,7 +172,7 @@ export default function App() {
           window.scrollTo({ top: 0 });
         }
       } else {
-        window.location.hash = '#/introduction';
+        window.location.hash = '#/';
       }
     };
 
@@ -478,7 +483,7 @@ export default function App() {
             <Menu className="w-6 h-6" />
           </button>
           
-          <a href="#/introduction" className="flex items-center gap-2 font-semibold text-lg text-slate-900 dark:text-white hover:opacity-90">
+          <a href="#/" className="flex items-center gap-2 font-semibold text-lg text-slate-900 dark:text-white hover:opacity-90">
             <img src={logo} alt="Crifolayer Logo" className="w-6 h-6 object-contain" />
             <span className="font-bold tracking-tight">Crifolayer</span>
             <span className="hidden sm:inline text-xs bg-[#f6f8fa] dark:bg-[#161b22] border border-[#d0d7de] dark:border-[#30363d] text-[#57606a] dark:text-[#8b949e] px-2 py-0.5 rounded-full font-normal font-mono">Docs</span>
@@ -512,7 +517,7 @@ export default function App() {
           </button>
           
           <nav className="hidden lg:flex items-center gap-4 text-sm font-medium text-[#57606a] dark:text-[#8b949e]">
-            <a href="#/getting-started" className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors">Guides</a>
+            <a href="#/introduction" className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors">Guides</a>
             <a href="#/api-reference" className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors">API Reference</a>
             <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors flex items-center gap-1">
               GitHub <ExternalLink className="w-3 h-3" />
@@ -533,154 +538,158 @@ export default function App() {
       </header>
 
       {/* 2. Main Content Layout Container */}
-      <div className="flex-1 w-full max-w-[1440px] mx-auto flex">
-        
-        {/* Left Sidebar Navigation - Desktop */}
-        <aside className="hidden lg:block w-[280px] shrink-0 sticky top-[60px] h-[calc(100vh-60px)] border-r border-[#d0d7de] dark:border-[#30363d] overflow-y-auto px-6 py-8 custom-scrollbar">
-          <nav className="space-y-6">
-            {docsStructure.map(section => (
-              <div key={section.title} className="space-y-2">
-                <button
-                  onClick={() => toggleSection(section.title)}
-                  className="w-full flex items-center justify-between font-semibold text-xs tracking-wider text-[#57606a] dark:text-[#8b949e] uppercase hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
-                >
-                  <span>{section.title}</span>
-                  {expandedSections[section.title] ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-                </button>
+      {currentDocId === 'home' ? (
+        <LandingPage />
+      ) : (
+        <div className="flex-1 w-full max-w-[1440px] mx-auto flex">
+          
+          {/* Left Sidebar Navigation - Desktop */}
+          <aside className="hidden lg:block w-[280px] shrink-0 sticky top-[60px] h-[calc(100vh-60px)] border-r border-[#d0d7de] dark:border-[#30363d] overflow-y-auto px-6 py-8 custom-scrollbar">
+            <nav className="space-y-6">
+              {docsStructure.map(section => (
+                <div key={section.title} className="space-y-2">
+                  <button
+                    onClick={() => toggleSection(section.title)}
+                    className="w-full flex items-center justify-between font-semibold text-xs tracking-wider text-[#57606a] dark:text-[#8b949e] uppercase hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                  >
+                    <span>{section.title}</span>
+                    {expandedSections[section.title] ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                  </button>
 
-                {expandedSections[section.title] && (
-                  <ul className="space-y-1.5 border-l border-[#d0d7de] dark:border-[#30363d] ml-1 pl-3">
-                    {section.items.map(item => {
-                      const isActive = currentDocId === item.id;
-                      return (
-                        <li key={item.id}>
-                          <a
-                            href={`#/${item.id}`}
-                            className={`block py-1.5 text-sm font-normal rounded-md transition-all ${
-                              isActive
-                                ? 'text-[#0969da] dark:text-[#2f81f7] font-semibold -ml-3.5 pl-3 border-l-2 border-[#0969da] dark:border-[#2f81f7]'
-                                : 'text-[#484f58] dark:text-[#8b949e] hover:text-[#0969da] dark:hover:text-[#2f81f7]'
-                            }`}
-                          >
-                            {item.title}
-                          </a>
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  {expandedSections[section.title] && (
+                    <ul className="space-y-1.5 border-l border-[#d0d7de] dark:border-[#30363d] ml-1 pl-3">
+                      {section.items.map(item => {
+                        const isActive = currentDocId === item.id;
+                        return (
+                          <li key={item.id}>
+                            <a
+                              href={`#/${item.id}`}
+                              className={`block py-1.5 text-sm font-normal rounded-md transition-all ${
+                                isActive
+                                  ? 'text-[#0969da] dark:text-[#2f81f7] font-semibold -ml-3.5 pl-3 border-l-2 border-[#0969da] dark:border-[#2f81f7]'
+                                  : 'text-[#484f58] dark:text-[#8b949e] hover:text-[#0969da] dark:hover:text-[#2f81f7]'
+                              }`}
+                            >
+                              {item.title}
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </nav>
+          </aside>
+
+          {/* Main Content Area */}
+          <main className="flex-1 min-w-0 px-4 py-8 lg:px-10 lg:py-12 flex flex-col justify-between">
+            <div className="max-w-[760px] w-full mx-auto">
+              
+              {/* Breadcrumbs */}
+              {currentDocItem && (
+                <nav className="flex items-center gap-1.5 text-xs text-[#57606a] dark:text-[#8b949e] mb-6">
+                  <span>Docs</span>
+                  <ChevronRight className="w-3 h-3" />
+                  <span>{currentDocItem.category}</span>
+                  <ChevronRight className="w-3 h-3" />
+                  <span className="text-[#24292f] dark:text-[#f0f6fc] font-medium">{currentDocItem.title}</span>
+                </nav>
+              )}
+
+              {/* Markdown Output Area */}
+              <article
+                id="docs-content-area"
+                className="prose prose-slate dark:prose-invert max-w-none 
+                  prose-headings:font-semibold prose-headings:text-slate-900 dark:prose-headings:text-white
+                  prose-a:text-[#0969da] dark:prose-a:text-[#2f81f7] prose-a:no-underline hover:prose-a:underline
+                  prose-pre:bg-[#f6f8fa] dark:prose-pre:bg-[#161b22] prose-pre:border prose-pre:border-[#d0d7de] dark:prose-pre:border-[#30363d]
+                  prose-code:text-[#24292f] dark:prose-code:text-[#c9d1d9] prose-code:bg-[#f6f8fa] dark:prose-code:bg-[#161b22] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
+                  prose-strong:font-bold prose-strong:text-slate-950 dark:prose-strong:text-white
+                  prose-img:rounded-lg prose-img:border prose-img:border-[#d0d7de] dark:prose-img:border-[#30363d]"
+                dangerouslySetInnerHTML={{ __html: renderedHtml }}
+              />
+
+              {/* Pagination: Previous & Next */}
+              <div className="flex items-center justify-between border-t border-[#d0d7de] dark:border-[#30363d] mt-12 pt-6">
+                {prevDoc ? (
+                  <a
+                    href={`#/${prevDoc.id}`}
+                    className="flex flex-col gap-1 items-start max-w-[45%] text-left group p-2 -ml-2 rounded-lg hover:bg-[#f6f8fa] dark:hover:bg-[#161b22] transition-colors"
+                  >
+                    <span className="text-xs text-[#57606a] dark:text-[#8b949e] flex items-center gap-1 font-medium">
+                      <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" /> Previous
+                    </span>
+                    <span className="text-sm font-semibold text-[#0969da] dark:text-[#2f81f7] line-clamp-1">
+                      {prevDoc.title}
+                    </span>
+                  </a>
+                ) : (
+                  <div />
+                )}
+
+                {nextDoc ? (
+                  <a
+                    href={`#/${nextDoc.id}`}
+                    className="flex flex-col gap-1 items-end max-w-[45%] text-right group p-2 -mr-2 rounded-lg hover:bg-[#f6f8fa] dark:hover:bg-[#161b22] transition-colors"
+                  >
+                    <span className="text-xs text-[#57606a] dark:text-[#8b949e] flex items-center gap-1 font-medium">
+                      Next <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    </span>
+                    <span className="text-sm font-semibold text-[#0969da] dark:text-[#2f81f7] line-clamp-1">
+                      {nextDoc.title}
+                    </span>
+                  </a>
+                ) : (
+                  <div />
                 )}
               </div>
-            ))}
-          </nav>
-        </aside>
 
-        {/* Main Content Area */}
-        <main className="flex-1 min-w-0 px-4 py-8 lg:px-10 lg:py-12 flex flex-col justify-between">
-          <div className="max-w-[760px] w-full mx-auto">
-            
-            {/* Breadcrumbs */}
-            {currentDocItem && (
-              <nav className="flex items-center gap-1.5 text-xs text-[#57606a] dark:text-[#8b949e] mb-6">
-                <span>Docs</span>
-                <ChevronRight className="w-3 h-3" />
-                <span>{currentDocItem.category}</span>
-                <ChevronRight className="w-3 h-3" />
-                <span className="text-[#24292f] dark:text-[#f0f6fc] font-medium">{currentDocItem.title}</span>
-              </nav>
-            )}
-
-            {/* Markdown Output Area */}
-            <article
-              id="docs-content-area"
-              className="prose prose-slate dark:prose-invert max-w-none 
-                prose-headings:font-semibold prose-headings:text-slate-900 dark:prose-headings:text-white
-                prose-a:text-[#0969da] dark:prose-a:text-[#2f81f7] prose-a:no-underline hover:prose-a:underline
-                prose-pre:bg-[#f6f8fa] dark:prose-pre:bg-[#161b22] prose-pre:border prose-pre:border-[#d0d7de] dark:prose-pre:border-[#30363d]
-                prose-code:text-[#24292f] dark:prose-code:text-[#c9d1d9] prose-code:bg-[#f6f8fa] dark:prose-code:bg-[#161b22] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
-                prose-strong:font-bold prose-strong:text-slate-950 dark:prose-strong:text-white
-                prose-img:rounded-lg prose-img:border prose-img:border-[#d0d7de] dark:prose-img:border-[#30363d]"
-              dangerouslySetInnerHTML={{ __html: renderedHtml }}
-            />
-
-            {/* Pagination: Previous & Next */}
-            <div className="flex items-center justify-between border-t border-[#d0d7de] dark:border-[#30363d] mt-12 pt-6">
-              {prevDoc ? (
-                <a
-                  href={`#/${prevDoc.id}`}
-                  className="flex flex-col gap-1 items-start max-w-[45%] text-left group p-2 -ml-2 rounded-lg hover:bg-[#f6f8fa] dark:hover:bg-[#161b22] transition-colors"
-                >
-                  <span className="text-xs text-[#57606a] dark:text-[#8b949e] flex items-center gap-1 font-medium">
-                    <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" /> Previous
-                  </span>
-                  <span className="text-sm font-semibold text-[#0969da] dark:text-[#2f81f7] line-clamp-1">
-                    {prevDoc.title}
-                  </span>
-                </a>
-              ) : (
-                <div />
-              )}
-
-              {nextDoc ? (
-                <a
-                  href={`#/${nextDoc.id}`}
-                  className="flex flex-col gap-1 items-end max-w-[45%] text-right group p-2 -mr-2 rounded-lg hover:bg-[#f6f8fa] dark:hover:bg-[#161b22] transition-colors"
-                >
-                  <span className="text-xs text-[#57606a] dark:text-[#8b949e] flex items-center gap-1 font-medium">
-                    Next <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </span>
-                  <span className="text-sm font-semibold text-[#0969da] dark:text-[#2f81f7] line-clamp-1">
-                    {nextDoc.title}
-                  </span>
-                </a>
-              ) : (
-                <div />
-              )}
             </div>
 
-          </div>
+            {/* Docs Footer */}
+            <footer className="max-w-[760px] w-full mx-auto border-t border-[#d0d7de]/50 dark:border-[#30363d]/50 mt-16 pt-6 text-xs text-[#57606a] dark:text-[#8b949e] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                Crifolayer TrustLayer Platform Documentation · © 2026.
+              </div>
+              <div className="flex gap-4">
+                <a href="#/" className="hover:underline">Home</a>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center gap-1">GitHub <ExternalLink className="w-3 h-3" /></a>
+              </div>
+            </footer>
+          </main>
 
-          {/* Docs Footer */}
-          <footer className="max-w-[760px] w-full mx-auto border-t border-[#d0d7de]/50 dark:border-[#30363d]/50 mt-16 pt-6 text-xs text-[#57606a] dark:text-[#8b949e] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              Crifolayer TrustLayer Platform Documentation · © 2026.
-            </div>
-            <div className="flex gap-4">
-              <a href="#/introduction" className="hover:underline">Home</a>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center gap-1">GitHub <ExternalLink className="w-3 h-3" /></a>
-            </div>
-          </footer>
-        </main>
+          {/* Right Sidebar - Sticky Table of Contents */}
+          {currentHeaders.length > 0 && (
+            <aside className="hidden xl:block w-[240px] shrink-0 sticky top-[60px] h-[calc(100vh-60px)] overflow-y-auto px-4 py-8 custom-scrollbar">
+              <h4 className="font-semibold text-xs text-[#24292f] dark:text-[#f0f6fc] uppercase tracking-wider mb-3">
+                On this page
+              </h4>
+              <ul className="space-y-2 text-xs border-l border-[#d0d7de]/50 dark:border-[#30363d]/50 pl-0">
+                {currentHeaders.map(header => {
+                  const isActive = activeHeaderId === header.id;
+                  const isH3 = header.level === 3;
+                  return (
+                    <li key={header.id} style={{ paddingLeft: isH3 ? '12px' : '0px' }}>
+                      <a
+                        href={`#/${currentDocId}#${header.id}`}
+                        className={`block py-1 -ml-px pl-3 border-l ${
+                          isActive
+                            ? 'text-[#0969da] dark:text-[#2f81f7] font-semibold border-l border-[#0969da] dark:border-[#2f81f7]'
+                            : 'text-[#57606a] dark:text-[#8b949e] hover:text-slate-900 dark:hover:text-[#f0f6fc] border-l border-transparent'
+                        }`}
+                      >
+                        {header.text}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </aside>
+          )}
 
-        {/* Right Sidebar - Sticky Table of Contents */}
-        {currentHeaders.length > 0 && (
-          <aside className="hidden xl:block w-[240px] shrink-0 sticky top-[60px] h-[calc(100vh-60px)] overflow-y-auto px-4 py-8 custom-scrollbar">
-            <h4 className="font-semibold text-xs text-[#24292f] dark:text-[#f0f6fc] uppercase tracking-wider mb-3">
-              On this page
-            </h4>
-            <ul className="space-y-2 text-xs border-l border-[#d0d7de]/50 dark:border-[#30363d]/50 pl-0">
-              {currentHeaders.map(header => {
-                const isActive = activeHeaderId === header.id;
-                const isH3 = header.level === 3;
-                return (
-                  <li key={header.id} style={{ paddingLeft: isH3 ? '12px' : '0px' }}>
-                    <a
-                      href={`#/${currentDocId}#${header.id}`}
-                      className={`block py-1 -ml-px pl-3 border-l ${
-                        isActive
-                          ? 'text-[#0969da] dark:text-[#2f81f7] font-semibold border-l border-[#0969da] dark:border-[#2f81f7]'
-                          : 'text-[#57606a] dark:text-[#8b949e] hover:text-slate-900 dark:hover:text-[#f0f6fc] border-l border-transparent'
-                      }`}
-                    >
-                      {header.text}
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </aside>
-        )}
-
-      </div>
+        </div>
+      )}
 
       {/* 3. Mobile Navigation Sidebar Menu Modal */}
       {isMobileMenuOpen && (
@@ -820,6 +829,155 @@ export default function App() {
           </div>
         </div>
       )}
+
+    </div>
+  );
+}
+
+function LandingPage() {
+  return (
+    <div className="flex-1 relative overflow-hidden bg-white text-slate-900 dark:bg-[#0d1117] dark:text-[#c9d1d9] transition-colors duration-200">
+      {/* Background Gradients */}
+      <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-blue-400/10 dark:bg-blue-600/5 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-purple-400/10 dark:bg-purple-600/5 blur-[120px] pointer-events-none" />
+
+      {/* Hero Section */}
+      <div className="max-w-[1200px] mx-auto px-4 pt-24 pb-20 text-center sm:px-6 lg:px-8 relative z-10">
+        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl text-slate-900 dark:text-white leading-tight">
+          Secure, Decentralized <br />
+          <span className="bg-gradient-to-r from-[#0969da] via-blue-500 to-[#8250df] dark:from-[#2f81f7] dark:via-blue-400 dark:to-[#d2a8ff] bg-clip-text text-transparent">
+            Trust & Reputation Gateway
+          </span>
+        </h1>
+        <p className="max-w-2xl mx-auto mt-6 text-lg md:text-xl text-[#57606a] dark:text-[#8b949e] font-normal leading-relaxed">
+          Automated B2B compliance, sybil fraud auditing, and identity passport sharing. Securely check reputation with zero friction and enterprise-grade privacy protection.
+        </p>
+
+        {/* Actions */}
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-10">
+          <a
+            href="#/introduction"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-[#0969da] hover:bg-[#0550ae] dark:bg-[#2188ff] dark:hover:bg-[#1f6feb] text-white font-semibold shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 group cursor-pointer"
+          >
+            Get Started
+            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+          </a>
+          <a
+            href="https://github.com/Sujoymoulick/Crifolayer-Docs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-[#f6f8fa] hover:bg-[#eaeef2] dark:bg-[#21262d] dark:hover:bg-[#30363d] border border-[#d0d7de] dark:border-[#30363d] font-semibold transition-all hover:-translate-y-0.5 cursor-pointer text-slate-700 dark:text-[#c9d1d9]"
+          >
+            View on GitHub
+          </a>
+        </div>
+      </div>
+
+      {/* Feature Cards Grid */}
+      <div className="max-w-[1200px] mx-auto px-4 py-16 sm:px-6 lg:px-8 border-t border-[#d0d7de]/50 dark:border-[#30363d]/50 relative z-10">
+        <h2 className="text-3xl font-extrabold text-center text-slate-900 dark:text-white mb-16">
+          Core Engine Architecture
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          
+          {/* Card 1: Trust Score */}
+          <div className="backdrop-blur-md bg-white/40 dark:bg-[#161b22]/40 border border-[#d0d7de] dark:border-[#30363d] rounded-xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/40 text-[#0969da] dark:text-[#2f81f7] mb-5 shadow-inner">
+              <Shield className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">Dynamic Trust Scoring</h3>
+            <p className="text-[#57606a] dark:text-[#8b949e] text-sm leading-relaxed">
+              Calculate user reputation scores (300-1000) inside our verification pipeline, analyzing KYC, social integrations, and collusion risks.
+            </p>
+          </div>
+
+          {/* Card 2: B2B OAuth PKCE */}
+          <div className="backdrop-blur-md bg-white/40 dark:bg-[#161b22]/40 border border-[#d0d7de] dark:border-[#30363d] rounded-xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/40 text-[#8250df] dark:text-[#d2a8ff] mb-5 shadow-inner">
+              <FileCode className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">Secure OAuth PKCE</h3>
+            <p className="text-[#57606a] dark:text-[#8b949e] text-sm leading-relaxed">
+              Enable partner B2B integrations to request data sharing consent loops securely without handling raw user access credentials.
+            </p>
+          </div>
+
+          {/* Card 3: GDPR Compliance */}
+          <div className="backdrop-blur-md bg-white/40 dark:bg-[#161b22]/40 border border-[#d0d7de] dark:border-[#30363d] rounded-xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+            <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 mb-5 shadow-inner">
+              <Info className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">GDPR Purge & Compliance</h3>
+            <p className="text-[#57606a] dark:text-[#8b949e] text-sm leading-relaxed">
+              Perform GDPR compliant Right to Erasure account wipes. Encrypt data and prevent sybil score resets using ledger salting.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Code Showcase Section */}
+      <div className="max-w-[1200px] mx-auto px-4 py-20 sm:px-6 lg:px-8 border-t border-[#d0d7de]/50 dark:border-[#30363d]/50 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+        <div className="lg:col-span-5">
+          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">
+            Simple Developer Integration
+          </h2>
+          <p className="text-[#57606a] dark:text-[#8b949e] mb-8 leading-relaxed">
+            Integrate Crifolayer in minutes. Our type-safe Node.js SDK covers query fetching, passport decryption, webhooks verification, and background updates.
+          </p>
+          <ul className="space-y-3.5">
+            {['Official B2B Node.js SDK', 'Automatic rate limit retry handling', 'HMAC webhook signature validation'].map((feat, idx) => (
+              <li key={idx} className="flex items-center gap-2 text-sm font-semibold">
+                <Check className="w-4 h-4 text-emerald-500" />
+                <span>{feat}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="lg:col-span-7">
+          {/* Mock Terminal Window */}
+          <div className="w-full bg-[#161b22] border border-[#30363d] rounded-xl shadow-2xl overflow-hidden font-mono text-xs text-left">
+            <div className="bg-[#0d1117] px-4 py-3 border-b border-[#30363d] flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded-full bg-[#ff5f56]" />
+                <span className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
+                <span className="w-3 h-3 rounded-full bg-[#27c93f]" />
+              </div>
+              <span className="text-[#8b949e] font-sans text-xs">integration-example.js</span>
+              <div className="w-4" />
+            </div>
+            <div className="p-5 overflow-x-auto text-[#c9d1d9] leading-relaxed select-all">
+              <span className="text-[#ff7b72]">const</span> CrifolayerSDK = <span className="text-[#d2a8ff]">require</span>(<span className="text-[#a5d6ff]">'@crifolayer/sdk'</span>);<br />
+              <br />
+              <span className="text-[#ff7b72]">const</span> client = <span className="text-[#ff7b72]">new</span> <span className="text-[#79c0ff]">CrifolayerSDK</span>({`{`} <br />
+              &nbsp;&nbsp;apiKey: <span className="text-[#a5d6ff]">'tl_sb_acmeapp_8d7f6e52c803ab971e44f32e987c...'</span>,<br />
+              &nbsp;&nbsp;baseUrl: <span className="text-[#a5d6ff]">'https://api.crifolayer.com/api/v1'</span><br />
+              {`}`});<br />
+              <br />
+              <span className="text-[#ff7b72]">async</span> <span className="text-[#ff7b72]">function</span> <span className="text-[#d2a8ff]">getUserReputation</span>(userId) {`{`}<br />
+              &nbsp;&nbsp;<span className="text-[#ff7b72]">try</span> {`{`}<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#ff7b72]">const</span> response = <span className="text-[#ff7b72]">await</span> client.<span className="text-[#d2a8ff]">getTrustScore</span>(userId);<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;console.<span className="text-[#d2a8ff]">log</span>(<span className="text-[#a5d6ff]">\`Score: \${response.data.score}\`</span>); <span className="text-[#8b949e]">// 720 (HIGH_TRUST)</span><br />
+              &nbsp;&nbsp;{`}`} <span className="text-[#ff7b72]">catch</span> (err) {`{`}<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;console.<span className="text-[#d2a8ff]">error</span>(err);<br />
+              &nbsp;&nbsp;{`}`}<br />
+              {`}`}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Footer */}
+      <div className="bg-[#f6f8fa]/50 dark:bg-[#161b22]/30 border-t border-[#d0d7de]/50 dark:border-[#30363d]/50 py-16 text-center relative z-10">
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Ready to secure your application?</h3>
+        <p className="text-[#57606a] dark:text-[#8b949e] mt-2 mb-8 text-sm">Explore our integration blueprints, SDK methods, and API schemas.</p>
+        <a
+          href="#/introduction"
+          className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#0969da] hover:bg-[#0550ae] dark:bg-[#2188ff] dark:hover:bg-[#1f6feb] text-white font-semibold transition-all hover:-translate-y-0.5 cursor-pointer shadow-md hover:shadow-lg"
+        >
+          Explore Documentation
+        </a>
+      </div>
 
     </div>
   );
