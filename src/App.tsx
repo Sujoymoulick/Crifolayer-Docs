@@ -75,6 +75,11 @@ export default function App() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchResultsRef = useRef<HTMLDivElement>(null);
 
+  const navigateTo = (path: string) => {
+    window.history.pushState(null, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+
   // Custom marked renderer to output GitHub Docs style classes and anchors
   useEffect(() => {
     const customRenderer = {
@@ -180,29 +185,12 @@ export default function App() {
       }
     };
 
-    // Listen for history and popstate updates
+    // Listen for popstate updates (standard for history navigation)
     window.addEventListener('popstate', handleLocationChange);
-    
-    // Intercept pushState
-    const originalPushState = window.history.pushState;
-    window.history.pushState = function(...args) {
-      originalPushState.apply(this, args);
-      handleLocationChange();
-    };
-
-    // Intercept replaceState
-    const originalReplaceState = window.history.replaceState;
-    window.history.replaceState = function(...args) {
-      originalReplaceState.apply(this, args);
-      handleLocationChange();
-    };
-
     handleLocationChange();
 
     return () => {
       window.removeEventListener('popstate', handleLocationChange);
-      window.history.pushState = originalPushState;
-      window.history.replaceState = originalReplaceState;
     };
   }, []);
 
@@ -476,7 +464,7 @@ export default function App() {
   const selectSearchResult = (item: SearchIndexItem) => {
     setIsSearchOpen(false);
     const newUrl = `/${item.docId}${item.anchor ? '#' + item.anchor : ''}`;
-    window.history.pushState(null, '', newUrl);
+    navigateTo(newUrl);
   };
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -510,7 +498,7 @@ export default function App() {
           
           <a 
             href="/" 
-            onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/'); }}
+            onClick={(e) => { e.preventDefault(); navigateTo('/'); }}
             className="flex items-center gap-2 font-semibold text-lg text-slate-900 dark:text-white hover:opacity-90"
           >
             <img src={logo} alt="Crifolayer Logo" className="w-6 h-6 object-contain" />
@@ -548,14 +536,14 @@ export default function App() {
           <nav className="hidden lg:flex items-center gap-4 text-sm font-medium text-[#57606a] dark:text-[#8b949e]">
             <a 
               href="/introduction" 
-              onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/introduction'); }}
+              onClick={(e) => { e.preventDefault(); navigateTo('/introduction'); }}
               className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors"
             >
               Guides
             </a>
             <a 
               href="/api-reference" 
-              onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/api-reference'); }}
+              onClick={(e) => { e.preventDefault(); navigateTo('/api-reference'); }}
               className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors"
             >
               API Reference
@@ -605,7 +593,7 @@ export default function App() {
                           <li key={item.id}>
                             <a
                               href={`/${item.id}`}
-                              onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', `/${item.id}`); }}
+                              onClick={(e) => { e.preventDefault(); navigateTo(`/${item.id}`); }}
                               className={`block py-1.5 text-sm font-normal rounded-md transition-all ${
                                 isActive
                                   ? 'text-[#0969da] dark:text-[#2f81f7] font-semibold -ml-3.5 pl-3 border-l-2 border-[#0969da] dark:border-[#2f81f7]'
@@ -657,7 +645,7 @@ export default function App() {
                 {prevDoc ? (
                   <a
                     href={`/${prevDoc.id}`}
-                    onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', `/${prevDoc.id}`); }}
+                    onClick={(e) => { e.preventDefault(); navigateTo(`/${prevDoc.id}`); }}
                     className="flex flex-col gap-1 items-start max-w-[45%] text-left group p-2 -ml-2 rounded-lg hover:bg-[#f6f8fa] dark:hover:bg-[#161b22] transition-colors"
                   >
                     <span className="text-xs text-[#57606a] dark:text-[#8b949e] flex items-center gap-1 font-medium">
@@ -674,7 +662,7 @@ export default function App() {
                 {nextDoc ? (
                   <a
                     href={`/${nextDoc.id}`}
-                    onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', `/${nextDoc.id}`); }}
+                    onClick={(e) => { e.preventDefault(); navigateTo(`/${nextDoc.id}`); }}
                     className="flex flex-col gap-1 items-end max-w-[45%] text-right group p-2 -mr-2 rounded-lg hover:bg-[#f6f8fa] dark:hover:bg-[#161b22] transition-colors"
                   >
                     <span className="text-xs text-[#57606a] dark:text-[#8b949e] flex items-center gap-1 font-medium">
@@ -699,7 +687,7 @@ export default function App() {
               <div className="flex gap-4">
                 <a 
                   href="/" 
-                  onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/'); }}
+                  onClick={(e) => { e.preventDefault(); navigateTo('/'); }}
                   className="hover:underline"
                 >
                   Home
@@ -723,7 +711,7 @@ export default function App() {
                     <li key={header.id} style={{ paddingLeft: isH3 ? '12px' : '0px' }}>
                       <a
                         href={`/${currentDocId}#${header.id}`}
-                        onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', `/${currentDocId}#${header.id}`); }}
+                        onClick={(e) => { e.preventDefault(); navigateTo(`/${currentDocId}#${header.id}`); }}
                         className={`block py-1 -ml-px pl-3 border-l ${
                           isActive
                             ? 'text-[#0969da] dark:text-[#2f81f7] font-semibold border-l border-[#0969da] dark:border-[#2f81f7]'
@@ -772,7 +760,7 @@ export default function App() {
                         <li key={item.id}>
                           <a
                             href={`/${item.id}`}
-                            onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', `/${item.id}`); }}
+                            onClick={(e) => { e.preventDefault(); navigateTo(`/${item.id}`); }}
                             className={`block py-1.5 text-sm rounded-md transition-colors ${
                               isActive
                                 ? 'text-[#0969da] dark:text-[#2f81f7] font-semibold -ml-3.5 pl-3 border-l-2 border-[#0969da] dark:border-[#2f81f7]'
@@ -909,7 +897,7 @@ function LandingPage() {
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-10">
           <a
             href="/introduction"
-            onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/introduction'); }}
+            onClick={(e) => { e.preventDefault(); navigateTo('/introduction'); }}
             className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-[#0969da] hover:bg-[#0550ae] dark:bg-[#2188ff] dark:hover:bg-[#1f6feb] text-white font-semibold shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 group cursor-pointer"
           >
             Get Started
@@ -1026,7 +1014,7 @@ function LandingPage() {
         <p className="text-[#57606a] dark:text-[#8b949e] mt-2 mb-8 text-sm">Explore our integration blueprints, SDK methods, and API schemas.</p>
         <a
           href="/introduction"
-          onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/introduction'); }}
+          onClick={(e) => { e.preventDefault(); navigateTo('/introduction'); }}
           className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#0969da] hover:bg-[#0550ae] dark:bg-[#2188ff] dark:hover:bg-[#1f6feb] text-white font-semibold transition-all hover:-translate-y-0.5 cursor-pointer shadow-md hover:shadow-lg"
         >
           Explore Documentation
