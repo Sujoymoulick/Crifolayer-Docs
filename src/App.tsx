@@ -108,7 +108,7 @@ export default function App() {
 
         return `<h${depth} id="${id}" class="anchor-header group relative ${classes}">
           ${text}
-          <a href="#${id}" class="absolute -left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 text-[#0969da] dark:text-[#2f81f7] font-normal transition-opacity pr-2" aria-label="Link to section">
+          <a href="#${id}" class="absolute -left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 text-[#e05314] dark:text-[#ff7a00] font-normal transition-opacity pr-2" aria-label="Link to section">
             #
           </a>
         </h${depth}>`;
@@ -546,18 +546,18 @@ export default function App() {
             <a 
               href="/introduction" 
               onClick={(e) => { e.preventDefault(); navigateTo('/introduction'); }}
-              className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors"
+              className="hover:text-[#e05314] dark:hover:text-[#ff7a00] transition-colors"
             >
               Guides
             </a>
             <a 
               href="/api-reference" 
               onClick={(e) => { e.preventDefault(); navigateTo('/api-reference'); }}
-              className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors"
+              className="hover:text-[#e05314] dark:hover:text-[#ff7a00] transition-colors"
             >
               API Reference
             </a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors flex items-center gap-1">
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#e05314] dark:hover:text-[#ff7a00] transition-colors flex items-center gap-1">
               GitHub <ExternalLink className="w-3 h-3" />
             </a>
           </nav>
@@ -605,8 +605,8 @@ export default function App() {
                               onClick={(e) => { e.preventDefault(); navigateTo(`/${item.id}`); }}
                               className={`block py-1.5 text-sm font-normal rounded-md transition-all ${
                                 isActive
-                                  ? 'text-[#0969da] dark:text-[#2f81f7] font-semibold -ml-3.5 pl-3 border-l-2 border-[#0969da] dark:border-[#2f81f7]'
-                                  : 'text-[#484f58] dark:text-[#8b949e] hover:text-[#0969da] dark:hover:text-[#2f81f7]'
+                                  ? 'text-[#e05314] dark:text-[#ff7a00] font-semibold -ml-3.5 pl-3 border-l-2 border-[#e05314] dark:border-[#ff7a00]'
+                                  : 'text-[#484f58] dark:text-[#8b949e] hover:text-[#e05314] dark:hover:text-[#ff7a00]'
                               }`}
                             >
                               {item.title}
@@ -641,7 +641,7 @@ export default function App() {
                 id="docs-content-area"
                 className="prose prose-slate dark:prose-invert max-w-none 
                   prose-headings:font-semibold prose-headings:text-slate-900 dark:prose-headings:text-white
-                  prose-a:text-[#0969da] dark:prose-a:text-[#2f81f7] prose-a:no-underline hover:prose-a:underline
+                  prose-a:text-[#e05314] dark:prose-a:text-[#ff7a00] prose-a:no-underline hover:prose-a:underline
                   prose-pre:bg-[#f6f8fa] dark:prose-pre:bg-[#161b22] prose-pre:border prose-pre:border-[#d0d7de] dark:prose-pre:border-[#30363d]
                   prose-code:text-[#24292f] dark:prose-code:text-[#c9d1d9] prose-code:bg-[#f6f8fa] dark:prose-code:bg-[#161b22] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
                   prose-strong:font-bold prose-strong:text-slate-950 dark:prose-strong:text-white
@@ -660,7 +660,7 @@ export default function App() {
                     <span className="text-xs text-[#57606a] dark:text-[#8b949e] flex items-center gap-1 font-medium">
                       <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" /> Previous
                     </span>
-                    <span className="text-sm font-semibold text-[#0969da] dark:text-[#2f81f7] line-clamp-1">
+                    <span className="text-sm font-semibold text-[#e05314] dark:text-[#ff7a00] line-clamp-1">
                       {prevDoc.title}
                     </span>
                   </a>
@@ -677,7 +677,7 @@ export default function App() {
                     <span className="text-xs text-[#57606a] dark:text-[#8b949e] flex items-center gap-1 font-medium">
                       Next <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </span>
-                    <span className="text-sm font-semibold text-[#0969da] dark:text-[#2f81f7] line-clamp-1">
+                    <span className="text-sm font-semibold text-[#e05314] dark:text-[#ff7a00] line-clamp-1">
                       {nextDoc.title}
                     </span>
                   </a>
@@ -723,7 +723,7 @@ export default function App() {
                         onClick={(e) => { e.preventDefault(); navigateTo(`/${currentDocId}#${header.id}`); }}
                         className={`block py-1 -ml-px pl-3 border-l ${
                           isActive
-                            ? 'text-[#0969da] dark:text-[#2f81f7] font-semibold border-l border-[#0969da] dark:border-[#2f81f7]'
+                            ? 'text-[#e05314] dark:text-[#ff7a00] font-semibold border-l border-[#e05314] dark:border-[#ff7a00]'
                             : 'text-[#57606a] dark:text-[#8b949e] hover:text-slate-900 dark:hover:text-[#f0f6fc] border-l border-transparent'
                         }`}
                       >
@@ -772,8 +772,8 @@ export default function App() {
                             onClick={(e) => { e.preventDefault(); navigateTo(`/${item.id}`); }}
                             className={`block py-1.5 text-sm rounded-md transition-colors ${
                               isActive
-                                ? 'text-[#0969da] dark:text-[#2f81f7] font-semibold -ml-3.5 pl-3 border-l-2 border-[#0969da] dark:border-[#2f81f7]'
-                                : 'text-[#484f58] dark:text-[#8b949e] hover:text-[#0969da] dark:hover:text-[#2f81f7]'
+                                ? 'text-[#e05314] dark:text-[#ff7a00] font-semibold -ml-3.5 pl-3 border-l-2 border-[#e05314] dark:border-[#ff7a00]'
+                                : 'text-[#484f58] dark:text-[#8b949e] hover:text-[#e05314] dark:hover:text-[#ff7a00]'
                             }`}
                           >
                             {item.title}
@@ -844,7 +844,7 @@ export default function App() {
                     onMouseEnter={() => setSelectedSearchResultIndex(index)}
                     className={`p-3 rounded-md cursor-pointer transition-colors ${
                       isSelected
-                        ? 'bg-[#eaeef2] dark:bg-[#21262d] text-[#0969da] dark:text-[#2f81f7]'
+                        ? 'bg-[#eaeef2] dark:bg-[#21262d] text-[#e05314] dark:text-[#ff7a00]'
                         : 'text-slate-700 dark:text-[#c9d1d9]'
                     }`}
                   >
@@ -860,7 +860,7 @@ export default function App() {
                     </div>
                     {item.sectionTitle && (
                       <h5 className="font-semibold text-sm mt-1 flex items-center gap-1 text-slate-900 dark:text-white">
-                        <FileCode className="w-3.5 h-3.5 text-[#0969da] dark:text-[#2f81f7]" /> {item.sectionTitle}
+                        <FileCode className="w-3.5 h-3.5 text-[#e05314] dark:text-[#ff7a00]" /> {item.sectionTitle}
                       </h5>
                     )}
                     <p className="text-xs mt-1.5 opacity-80 line-clamp-2">
@@ -887,14 +887,14 @@ function LandingPage({ navigateTo }: { navigateTo: (path: string) => void }) {
   return (
     <div className="flex-1 relative overflow-hidden bg-white text-slate-900 dark:bg-[#0d1117] dark:text-[#c9d1d9] transition-colors duration-200">
       {/* Background Gradients */}
-      <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-blue-400/10 dark:bg-blue-600/5 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-orange-400/10 dark:bg-orange-600/5 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-purple-400/10 dark:bg-purple-600/5 blur-[120px] pointer-events-none" />
 
       {/* Hero Section */}
       <div className="max-w-[1200px] mx-auto px-4 pt-24 pb-20 text-center sm:px-6 lg:px-8 relative z-10">
         <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl text-slate-900 dark:text-white leading-tight">
           Secure, Decentralized <br />
-          <span className="bg-gradient-to-r from-[#0969da] via-blue-500 to-[#8250df] dark:from-[#2f81f7] dark:via-blue-400 dark:to-[#d2a8ff] bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-[#e05314] via-[#ff7a00] to-[#f59e0b] dark:from-[#ff7a00] dark:via-amber-500 dark:to-[#f59e0b] bg-clip-text text-transparent">
             Trust & Reputation Gateway
           </span>
         </h1>
@@ -907,7 +907,7 @@ function LandingPage({ navigateTo }: { navigateTo: (path: string) => void }) {
           <a
             href="/introduction"
             onClick={(e) => { e.preventDefault(); navigateTo('/introduction'); }}
-            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-[#0969da] hover:bg-[#0550ae] dark:bg-[#2188ff] dark:hover:bg-[#1f6feb] text-white font-semibold shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 group cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-[#e05314] hover:bg-[#c5420b] dark:bg-[#ff7a00] dark:hover:bg-[#e06c00] text-white font-semibold shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 group cursor-pointer"
           >
             Get Started
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -932,7 +932,7 @@ function LandingPage({ navigateTo }: { navigateTo: (path: string) => void }) {
           
           {/* Card 1: Trust Score */}
           <div className="backdrop-blur-md bg-white/40 dark:bg-[#161b22]/40 border border-[#d0d7de] dark:border-[#30363d] rounded-xl p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/40 text-[#0969da] dark:text-[#2f81f7] mb-5 shadow-inner">
+            <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-950/40 text-[#e05314] dark:text-[#ff7a00] mb-5 shadow-inner">
               <Shield className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">Dynamic Trust Scoring</h3>
@@ -1024,7 +1024,7 @@ function LandingPage({ navigateTo }: { navigateTo: (path: string) => void }) {
         <a
           href="/introduction"
           onClick={(e) => { e.preventDefault(); navigateTo('/introduction'); }}
-          className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#0969da] hover:bg-[#0550ae] dark:bg-[#2188ff] dark:hover:bg-[#1f6feb] text-white font-semibold transition-all hover:-translate-y-0.5 cursor-pointer shadow-md hover:shadow-lg"
+          className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#e05314] hover:bg-[#c5420b] dark:bg-[#ff7a00] dark:hover:bg-[#e06c00] text-white font-semibold transition-all hover:-translate-y-0.5 cursor-pointer shadow-md hover:shadow-lg"
         >
           Explore Documentation
         </a>

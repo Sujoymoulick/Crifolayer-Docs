@@ -2,13 +2,13 @@
 
 /* Theme overrides & custom scrollbar settings, matching GitHub Docs style */
 :root {
-  --color-primary: #0969da; /* GitHub Blue */
-  --color-primary-hover: #0550ae;
+  --color-primary: #e05314; /* Orange Theme */
+  --color-primary-hover: #c5420b;
 }
 
 @theme {
-  --color-github-blue: #0969da;
-  --color-github-blue-dark: #2f81f7;
+  --color-github-blue: #e05314;
+  --color-github-blue-dark: #ff7a00;
   --color-github-border-light: #d0d7de;
   --color-github-border-dark: #30363d;
   --color-github-bg-light: #f6f8fa;
@@ -184,14 +184,14 @@ pre {
 }
 
 .callout.note {
-  background-color: #ddf4ff;
-  border-left-color: #0969da;
-  color: #0969da;
+  background-color: #fff2e6;
+  border-left-color: #e05314;
+  color: #e05314;
 }
 .dark .callout.note {
-  background-color: rgba(56, 139, 253, 0.1);
-  border-left-color: #2f81f7;
-  color: #2f81f7;
+  background-color: rgba(249, 115, 22, 0.1);
+  border-left-color: #ff7a00;
+  color: #ff7a00;
 }
 
 .callout.tip {
