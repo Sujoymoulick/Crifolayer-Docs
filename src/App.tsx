@@ -49,7 +49,16 @@ interface SearchIndexItem {
 }
 
 export default function App() {
-  const [currentDocId, setCurrentDocId] = useState<string>('introduction');
+  const [currentDocId, setCurrentDocId] = useState<string>(() => {
+    // Determine initial document ID based on current pathname
+    if (typeof window === 'undefined') return 'home';
+    const pathname = window.location.pathname;
+    const docId = pathname.replace(/^\//, '') || '';
+    if (docId === '' || docId === 'home') {
+      return 'home';
+    }
+    return docsContent[docId] ? docId : 'home';
+  });
   const [activeHeaderId, setActiveHeaderId] = useState<string>('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
@@ -568,7 +577,7 @@ export default function App() {
 
       {/* 2. Main Content Layout Container */}
       {currentDocId === 'home' ? (
-        <LandingPage />
+        <LandingPage navigateTo={navigateTo} />
       ) : (
         <div className="flex-1 w-full max-w-[1440px] mx-auto flex">
           
@@ -874,7 +883,7 @@ export default function App() {
   );
 }
 
-function LandingPage() {
+function LandingPage({ navigateTo }: { navigateTo: (path: string) => void }) {
   return (
     <div className="flex-1 relative overflow-hidden bg-white text-slate-900 dark:bg-[#0d1117] dark:text-[#c9d1d9] transition-colors duration-200">
       {/* Background Gradients */}
@@ -998,7 +1007,7 @@ function LandingPage() {
               <span className="text-[#ff7b72]">async</span> <span className="text-[#ff7b72]">function</span> <span className="text-[#d2a8ff]">getUserReputation</span>(userId) {`{`}<br />
               &nbsp;&nbsp;<span className="text-[#ff7b72]">try</span> {`{`}<br />
               &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-[#ff7b72]">const</span> response = <span className="text-[#ff7b72]">await</span> client.<span className="text-[#d2a8ff]">getTrustScore</span>(userId);<br />
-              &nbsp;&nbsp;&nbsp;&nbsp;console.<span className="text-[#d2a8ff]">log</span>(<span className="text-[#a5d6ff]">\`Score: \${response.data.score}\`</span>); <span className="text-[#8b949e]">// 720 (HIGH_TRUST)</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;console.<span className="text-[#d2a8ff]">log</span>({"`Score: ${response.data.score}`"}); <span className="text-[#8b949e]">// 720 (HIGH_TRUST)</span><br />
               &nbsp;&nbsp;{`}`} <span className="text-[#ff7b72]">catch</span> (err) {`{`}<br />
               &nbsp;&nbsp;&nbsp;&nbsp;console.<span className="text-[#d2a8ff]">error</span>(err);<br />
               &nbsp;&nbsp;{`}`}<br />
