@@ -16,13 +16,24 @@ const FloatingPaths = memo(function FloatingPaths({ position }: { position: numb
                 684 - i * 5 * position
             } ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`,
             color: `rgba(249,115,22,${0.05 + i * 0.015})`,
-            width: 0.5 + i * 0.03,
-            duration: 20 + Math.random() * 10
+            width: 0.5 + i * 0.03
         }));
     }, [position]);
 
     return (
-        <div className="absolute inset-0 pointer-events-none">
+        <motion.div 
+            className="absolute inset-0 pointer-events-none opacity-45 dark:opacity-35"
+            animate={{
+                x: position === 1 ? [0, 12, -8, 0] : [0, -12, 8, 0],
+                y: position === 1 ? [0, -6, 6, 0] : [0, 6, -6, 0]
+            }}
+            transition={{
+                duration: 25,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut"
+            }}
+            style={{ willChange: 'transform' }}
+        >
             <svg
                 className="w-full h-full text-orange-500/20 dark:text-orange-500/10"
                 viewBox="0 0 696 316"
@@ -30,27 +41,16 @@ const FloatingPaths = memo(function FloatingPaths({ position }: { position: numb
             >
                 <title>Background Paths</title>
                 {paths.map((path) => (
-                    <motion.path
+                    <path
                         key={path.id}
                         d={path.d}
                         stroke="currentColor"
                         strokeWidth={path.width}
                         strokeOpacity={0.05 + path.id * 0.015}
-                        initial={{ pathLength: 0.3, opacity: 0.6 }}
-                        animate={{
-                            pathLength: 1,
-                            opacity: [0.3, 0.6, 0.3],
-                            pathOffset: [0, 1, 0],
-                        }}
-                        transition={{
-                            duration: path.duration,
-                            repeat: Number.POSITIVE_INFINITY,
-                            ease: "linear",
-                        }}
                     />
                 ))}
             </svg>
-        </div>
+        </motion.div>
     );
 });
 
