@@ -887,19 +887,25 @@ function LandingPage({ navigateTo }: { navigateTo: (path: string) => void }) {
   return (
     <div className="flex-1 relative overflow-hidden bg-white text-slate-900 dark:bg-[#0d1117] dark:text-[#c9d1d9] transition-colors duration-200">
       {/* Background Gradients */}
-      <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-orange-400/10 dark:bg-orange-600/5 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-purple-400/10 dark:bg-purple-600/5 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[80%] h-[70%] rounded-full bg-orange-500/10 dark:bg-orange-500/5 blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-purple-500/10 dark:bg-purple-600/5 blur-[120px] pointer-events-none" />
 
       {/* Hero Section */}
-      <div className="max-w-[1200px] mx-auto px-4 pt-24 pb-20 text-center sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-[1200px] mx-auto px-4 pt-20 pb-16 text-center sm:px-6 lg:px-8 relative z-10">
+        {/* Pill Badge */}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 dark:bg-orange-500/5 border border-orange-500/20 text-orange-600 dark:text-orange-400 text-xs font-semibold mb-8 hover:bg-orange-500/15 transition-colors cursor-default">
+          <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+          <span>✨ New: Trust Passport v2.0 is now live</span>
+        </div>
+
         <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl text-slate-900 dark:text-white leading-tight">
-          Secure, Decentralized <br />
+          Think better with <br />
           <span className="bg-gradient-to-r from-[#e05314] via-[#ff7a00] to-[#f59e0b] dark:from-[#ff7a00] dark:via-amber-500 dark:to-[#f59e0b] bg-clip-text text-transparent">
-            Trust & Reputation Gateway
+            Crifolayer TrustLayer
           </span>
         </h1>
-        <p className="max-w-2xl mx-auto mt-6 text-lg md:text-xl text-[#57606a] dark:text-[#8b949e] font-normal leading-relaxed">
-          Automated B2B compliance, sybil fraud auditing, and identity passport sharing. Securely check reputation with zero friction and enterprise-grade privacy protection.
+        <p className="max-w-2xl mx-auto mt-6 text-base sm:text-lg md:text-xl text-[#57606a] dark:text-[#8b949e] font-normal leading-relaxed">
+          Never compromise on B2B identity, compliance, or fraud mitigation. Verify reputation passports instantly through automated pkce audits and collusion rings detection.
         </p>
 
         {/* Actions */}
@@ -907,7 +913,7 @@ function LandingPage({ navigateTo }: { navigateTo: (path: string) => void }) {
           <a
             href="/introduction"
             onClick={(e) => { e.preventDefault(); navigateTo('/introduction'); }}
-            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-[#e05314] hover:bg-[#c5420b] dark:bg-[#ff7a00] dark:hover:bg-[#e06c00] text-white font-semibold shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 group cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#e05314] hover:bg-[#c5420b] dark:bg-[#ff7a00] dark:hover:bg-[#e06c00] text-white font-semibold shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 group cursor-pointer"
           >
             Get Started
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -916,10 +922,107 @@ function LandingPage({ navigateTo }: { navigateTo: (path: string) => void }) {
             href="https://github.com/Sujoymoulick/Crifolayer-Docs"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-[#f6f8fa] hover:bg-[#eaeef2] dark:bg-[#21262d] dark:hover:bg-[#30363d] border border-[#d0d7de] dark:border-[#30363d] font-semibold transition-all hover:-translate-y-0.5 cursor-pointer text-slate-700 dark:text-[#c9d1d9]"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#f6f8fa] hover:bg-[#eaeef2] dark:bg-[#21262d] dark:hover:bg-[#30363d] border border-[#d0d7de] dark:border-[#30363d] font-semibold transition-all hover:-translate-y-0.5 cursor-pointer text-slate-700 dark:text-[#c9d1d9]"
           >
             View on GitHub
           </a>
+        </div>
+
+        {/* Reflect-Style Glowing Portal and Mock Dashboard */}
+        <div className="relative mt-20 max-w-4xl mx-auto">
+          {/* Glowing Arch Behind Dashboard */}
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-[300px] sm:w-[480px] h-[160px] sm:h-[240px] rounded-t-full bg-gradient-to-t from-orange-500/25 via-orange-500/10 to-transparent blur-md pointer-events-none border-t border-orange-500/50 shadow-[0_-25px_100px_rgba(249,115,22,0.45)] dark:shadow-[0_-25px_100px_rgba(249,115,22,0.25)]" />
+          
+          {/* Main Dashboard Mockup Card */}
+          <div className="relative z-10 w-full rounded-xl border border-slate-200/10 dark:border-white/10 bg-[#0d1117]/85 backdrop-blur-xl shadow-2xl overflow-hidden aspect-[16/10] flex text-slate-300">
+            {/* Sidebar Mockup */}
+            <div className="w-[180px] shrink-0 border-r border-[#30363d]/50 bg-[#0d1117]/60 p-4 hidden sm:flex flex-col gap-6 text-left select-none">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-orange-500" />
+                <span className="font-bold text-[10px] tracking-wider text-[#c9d1d9] uppercase font-mono">TrustOS</span>
+              </div>
+              <div className="space-y-1.5">
+                {['Passport Hub', 'B2B Consents', 'Collusion Audits', 'Compliance Logs', 'API Keys'].map((label, idx) => (
+                  <div key={idx} className={`px-2 py-1.5 rounded-md text-[10px] font-semibold flex items-center gap-2 ${idx === 0 ? 'bg-orange-500/10 text-orange-400 border border-orange-500/10' : 'text-[#8b949e] hover:text-[#c9d1d9] transition-colors'}`}>
+                    <div className={`w-1.2 h-1.2 rounded-full ${idx === 0 ? 'bg-orange-500' : 'bg-transparent'}`} />
+                    {label}
+                  </div>
+                ))}
+              </div>
+              <div className="mt-auto pt-4 border-t border-[#30363d]/25 text-[9px] text-[#8b949e]">
+                Sandbox Environment
+              </div>
+            </div>
+
+            {/* Main Content Area Mockup */}
+            <div className="flex-1 p-6 flex flex-col gap-5 text-left overflow-hidden">
+              {/* Header */}
+              <div className="flex justify-between items-center pb-4 border-b border-[#30363d]/50">
+                <div>
+                  <h4 className="text-xs sm:text-sm font-semibold text-white">Acme Passport Sandbox</h4>
+                  <p className="text-[9px] text-[#8b949e]">Connected via PKCE Consent loop</p>
+                </div>
+                <div className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[9px] font-bold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  CONNECTED
+                </div>
+              </div>
+
+              {/* Grid Widgets */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Score Widget */}
+                <div className="bg-[#161b22]/70 border border-[#30363d]/50 rounded-lg p-3.5 flex flex-col gap-1 relative overflow-hidden">
+                  <div className="text-[9px] text-[#8b949e] uppercase font-bold tracking-wider">Verification Score</div>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-xl sm:text-2xl font-extrabold text-white">842</span>
+                    <span className="text-[9px] text-emerald-400 font-semibold">▲ +12%</span>
+                  </div>
+                  <div className="text-[9px] text-orange-400 font-semibold px-2 py-0.5 rounded bg-orange-500/10 border border-orange-500/15 self-start mt-1">
+                    HIGH_TRUST
+                  </div>
+                </div>
+
+                {/* Risk Widget */}
+                <div className="bg-[#161b22]/70 border border-[#30363d]/50 rounded-lg p-3.5 flex flex-col gap-1">
+                  <div className="text-[9px] text-[#8b949e] uppercase font-bold tracking-wider">Collusion Risk</div>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-xl sm:text-2xl font-extrabold text-white">0.02%</span>
+                    <span className="text-[9px] text-slate-400 font-semibold">SD</span>
+                  </div>
+                  <div className="text-[9px] text-emerald-400 font-semibold px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/15 self-start mt-1">
+                    MINIMAL_RISK
+                  </div>
+                </div>
+              </div>
+
+              {/* Log window */}
+              <div className="flex-1 flex flex-col gap-2 min-h-0">
+                <div className="text-[9px] text-[#8b949e] uppercase font-bold tracking-wider">Reputation Logs</div>
+                <div className="flex-1 border border-[#30363d]/60 bg-[#161b22]/35 rounded-lg p-3 space-y-1.5 overflow-y-auto text-[9px] font-mono custom-scrollbar">
+                  {[
+                    { time: '01:38:12', event: 'OAuth scope authorized: reputation.read', status: 'SUCCESS' },
+                    { time: '01:38:13', event: 'Sybil proof hashing generated', status: 'SUCCESS' },
+                    { time: '01:38:15', event: 'Neo4j collusion query completed', status: 'SUCCESS' }
+                  ].map((log, idx) => (
+                    <div key={idx} className="flex justify-between items-center border-b border-[#30363d]/30 pb-1.5 last:border-b-0 last:pb-0">
+                      <span className="text-[#8b949e]">{log.time}</span>
+                      <span className="text-[#c9d1d9] flex-1 ml-3 truncate text-left">{log.event}</span>
+                      <span className="text-emerald-400 font-bold">{log.status}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Play Button Overlay (Reflect Layout) */}
+            <div className="absolute inset-0 bg-slate-950/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+              <div className="w-14 h-14 rounded-full bg-orange-600 hover:bg-orange-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/40 transform hover:scale-105 transition-transform duration-200">
+                <svg className="w-5 h-5 fill-current ml-1" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
