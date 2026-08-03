@@ -84,6 +84,88 @@ export default function App() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchResultsRef = useRef<HTMLDivElement>(null);
 
+  // Screen Pet Mascot State
+  const [pet, setPet] = useState<{
+    x: number;
+    action: 'idle' | 'walking' | 'sleeping' | 'talking';
+    direction: 'left' | 'right';
+    bubbleText: string;
+  }>({
+    x: 45,
+    action: 'idle',
+    direction: 'right',
+    bubbleText: ''
+  });
+
+  // Pet movement AI state machine
+  useEffect(() => {
+    const actionTimer = setInterval(() => {
+      setPet(prev => {
+        if (prev.action === 'talking') return prev; // Do not interrupt speech
+        
+        const rand = Math.random();
+        if (rand < 0.4) {
+          // Walk to a new random percentage (5% to 85%)
+          const newX = Math.floor(Math.random() * 80) + 5;
+          const direction = newX > prev.x ? 'right' : 'left';
+          return {
+            ...prev,
+            x: newX,
+            action: 'walking',
+            direction
+          };
+        } else if (rand < 0.7) {
+          return {
+            ...prev,
+            action: 'sleeping'
+          };
+        } else {
+          return {
+            ...prev,
+            action: 'idle'
+          };
+        }
+      });
+    }, 8000);
+
+    return () => clearInterval(actionTimer);
+  }, []);
+
+  // Return walking to idle after transition
+  useEffect(() => {
+    if (pet.action === 'walking') {
+      const timer = setTimeout(() => {
+        setPet(prev => prev.action === 'walking' ? { ...prev, action: 'idle' } : prev);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [pet.action, pet.x]);
+
+  const handlePetClick = () => {
+    const petTalks = [
+      "Security is cat-tastic! 🐾",
+      "Have you checked the B2B OAuth PKCE flow? 🔐",
+      "Remember to salt your compliance hashes! 🧂",
+      "Need help? Press ⌘+K to search! 🔍",
+      "Looking good in orange! 🍊",
+      "My reputation score is 1000/1000! 📈",
+      "Neo4j is great for mapping trust networks! 🕸️",
+      "GDPR Right to Erasure is fully compliant! 🛡️",
+      "Let's protect some gateways! 🛡️"
+    ];
+    const randomSpeech = petTalks[Math.floor(Math.random() * petTalks.length)];
+    setPet(prev => ({
+      ...prev,
+      action: 'talking',
+      bubbleText: randomSpeech
+    }));
+
+    // Reset back to idle after 4 seconds
+    setTimeout(() => {
+      setPet(prev => prev.action === 'talking' ? { ...prev, action: 'idle', bubbleText: '' } : prev);
+    }, 4000);
+  };
+
   const navigateTo = (path: string) => {
     window.history.pushState(null, '', path);
     window.dispatchEvent(new PopStateEvent('popstate'));
@@ -878,6 +960,82 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* Interactive Screen Pet Mascot */}
+      <div 
+        className="fixed bottom-4 z-50 pointer-events-auto transition-all duration-[3000ms] ease-in-out select-none"
+        style={{ 
+          left: `${pet.x}%`,
+          transform: pet.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)'
+        }}
+      >
+        {/* Speech Bubble */}
+        {pet.action === 'talking' && (
+          <div 
+            className="absolute bottom-14 left-1/2 -translate-x-1/2 w-48 bg-white dark:bg-[#161b22] border-2 border-orange-500 rounded-lg p-2 text-[10px] font-semibold text-slate-800 dark:text-[#c9d1d9] shadow-lg leading-snug animate-fade-in animate-duration-200"
+            style={{ transform: pet.direction === 'left' ? 'scaleX(-1) translateX(50%)' : 'scaleX(1) translateX(-50%)' }}
+          >
+            {pet.bubbleText}
+            {/* Bubble arrow */}
+            <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-orange-500" />
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[7px] border-t-white dark:border-t-[#161b22]" />
+          </div>
+        )}
+
+        {/* Sleeping indicator */}
+        {pet.action === 'sleeping' && (
+          <div 
+            className="absolute bottom-10 left-8 text-xs font-bold text-orange-500 dark:text-orange-400 font-mono animate-bounce flex gap-0.5"
+            style={{ transform: pet.direction === 'left' ? 'scaleX(-1)' : 'scaleX(1)' }}
+          >
+            <span>Z</span><span className="text-[10px] animate-pulse">z</span><span className="text-[8px] opacity-70">z</span>
+          </div>
+        )}
+
+        {/* Cute CSS Orange Cat */}
+        <div 
+          onClick={handlePetClick}
+          className={`relative w-10 h-10 cursor-pointer group transition-transform hover:scale-110 active:scale-95 ${
+            pet.action === 'walking' ? 'animate-bounce' : ''
+          }`}
+        >
+          {/* Orange Cat Body Container */}
+          <div className="w-10 h-8 bg-orange-500 rounded-full relative flex items-center justify-center border border-orange-600 shadow-md">
+            {/* Left Ear */}
+            <div className="absolute -top-1.5 -left-0.5 w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-b-[8px] border-b-orange-600 -rotate-12 group-hover:-rotate-6 transition-transform" />
+            {/* Right Ear */}
+            <div className="absolute -top-1.5 -right-0.5 w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-b-[8px] border-b-orange-600 rotate-12 group-hover:rotate-6 transition-transform" />
+            
+            {/* Cat Face */}
+            <div className="flex gap-2.5 items-center justify-center mt-1">
+              {/* Eyes */}
+              {pet.action === 'sleeping' ? (
+                <>
+                  <span className="text-[7px] text-orange-700 font-bold -mt-1.5">^</span>
+                  <span className="text-[7px] text-orange-700 font-bold -mt-1.5">^</span>
+                </>
+              ) : (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-900" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-900" />
+                </>
+              )}
+            </div>
+            
+            {/* Nose/Mouth */}
+            <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 w-1.5 h-1 rounded-t-none rounded-b-full bg-orange-700" />
+            
+            {/* Whiskers */}
+            <div className="absolute top-4 -left-1 w-2.5 h-0.5 bg-orange-600/60 -rotate-6" />
+            <div className="absolute top-5 -left-1.5 w-3.5 h-0.5 bg-orange-600/60" />
+            <div className="absolute top-4 -right-1 w-2.5 h-0.5 bg-orange-600/60 rotate-6" />
+            <div className="absolute top-5 -right-1.5 w-3.5 h-0.5 bg-orange-600/60" />
+          </div>
+          
+          {/* Tail */}
+          <div className="absolute -bottom-1 -left-1.5 w-4 h-2 bg-orange-600 rounded-full origin-right rotate-45 animate-pulse" />
+        </div>
+      </div>
 
     </div>
   );
