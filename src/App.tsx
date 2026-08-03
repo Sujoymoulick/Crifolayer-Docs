@@ -145,13 +145,15 @@ export default function App() {
     localStorage.setItem('color-scheme', theme);
   }, [theme]);
 
-  // Hash Routing
+  // Path Routing
   useEffect(() => {
-    const handleHashChange = () => {
-      const fullHash = window.location.hash.replace('#/', '').replace('#', '');
-      const parts = fullHash.split('#');
-      const docId = parts[0] || '';
-      const anchor = parts[1] || '';
+    const handleLocationChange = () => {
+      const pathname = window.location.pathname;
+      const hash = window.location.hash;
+
+      // Extract docId from pathname (e.g., "/getting-started" -> "getting-started")
+      const docId = pathname.replace(/^\//, '') || '';
+      const anchor = hash.replace('#', '') || '';
 
       if (docId === '' || docId === 'home') {
         setCurrentDocId('home');
@@ -172,14 +174,36 @@ export default function App() {
           window.scrollTo({ top: 0 });
         }
       } else {
-        window.location.hash = '#/';
+        // Fallback to home route
+        window.history.replaceState(null, '', '/');
+        setCurrentDocId('home');
       }
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    handleHashChange();
+    // Listen for history and popstate updates
+    window.addEventListener('popstate', handleLocationChange);
+    
+    // Intercept pushState
+    const originalPushState = window.history.pushState;
+    window.history.pushState = function(...args) {
+      originalPushState.apply(this, args);
+      handleLocationChange();
+    };
 
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    // Intercept replaceState
+    const originalReplaceState = window.history.replaceState;
+    window.history.replaceState = function(...args) {
+      originalReplaceState.apply(this, args);
+      handleLocationChange();
+    };
+
+    handleLocationChange();
+
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.history.pushState = originalPushState;
+      window.history.replaceState = originalReplaceState;
+    };
   }, []);
 
   // Build local search index
@@ -451,7 +475,8 @@ export default function App() {
 
   const selectSearchResult = (item: SearchIndexItem) => {
     setIsSearchOpen(false);
-    window.location.hash = `#/${item.docId}${item.anchor ? '#' + item.anchor : ''}`;
+    const newUrl = `/${item.docId}${item.anchor ? '#' + item.anchor : ''}`;
+    window.history.pushState(null, '', newUrl);
   };
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -483,7 +508,11 @@ export default function App() {
             <Menu className="w-6 h-6" />
           </button>
           
-          <a href="#/" className="flex items-center gap-2 font-semibold text-lg text-slate-900 dark:text-white hover:opacity-90">
+          <a 
+            href="/" 
+            onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/'); }}
+            className="flex items-center gap-2 font-semibold text-lg text-slate-900 dark:text-white hover:opacity-90"
+          >
             <img src={logo} alt="Crifolayer Logo" className="w-6 h-6 object-contain" />
             <span className="font-bold tracking-tight">Crifolayer</span>
             <span className="hidden sm:inline text-xs bg-[#f6f8fa] dark:bg-[#161b22] border border-[#d0d7de] dark:border-[#30363d] text-[#57606a] dark:text-[#8b949e] px-2 py-0.5 rounded-full font-normal font-mono">Docs</span>
@@ -517,8 +546,20 @@ export default function App() {
           </button>
           
           <nav className="hidden lg:flex items-center gap-4 text-sm font-medium text-[#57606a] dark:text-[#8b949e]">
-            <a href="#/introduction" className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors">Guides</a>
-            <a href="#/api-reference" className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors">API Reference</a>
+            <a 
+              href="/introduction" 
+              onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/introduction'); }}
+              className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors"
+            >
+              Guides
+            </a>
+            <a 
+              href="/api-reference" 
+              onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/api-reference'); }}
+              className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors"
+            >
+              API Reference
+            </a>
             <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#0969da] dark:hover:text-[#2f81f7] transition-colors flex items-center gap-1">
               GitHub <ExternalLink className="w-3 h-3" />
             </a>
@@ -563,7 +604,8 @@ export default function App() {
                         return (
                           <li key={item.id}>
                             <a
-                              href={`#/${item.id}`}
+                              href={`/${item.id}`}
+                              onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', `/${item.id}`); }}
                               className={`block py-1.5 text-sm font-normal rounded-md transition-all ${
                                 isActive
                                   ? 'text-[#0969da] dark:text-[#2f81f7] font-semibold -ml-3.5 pl-3 border-l-2 border-[#0969da] dark:border-[#2f81f7]'
@@ -614,7 +656,8 @@ export default function App() {
               <div className="flex items-center justify-between border-t border-[#d0d7de] dark:border-[#30363d] mt-12 pt-6">
                 {prevDoc ? (
                   <a
-                    href={`#/${prevDoc.id}`}
+                    href={`/${prevDoc.id}`}
+                    onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', `/${prevDoc.id}`); }}
                     className="flex flex-col gap-1 items-start max-w-[45%] text-left group p-2 -ml-2 rounded-lg hover:bg-[#f6f8fa] dark:hover:bg-[#161b22] transition-colors"
                   >
                     <span className="text-xs text-[#57606a] dark:text-[#8b949e] flex items-center gap-1 font-medium">
@@ -630,7 +673,8 @@ export default function App() {
 
                 {nextDoc ? (
                   <a
-                    href={`#/${nextDoc.id}`}
+                    href={`/${nextDoc.id}`}
+                    onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', `/${nextDoc.id}`); }}
                     className="flex flex-col gap-1 items-end max-w-[45%] text-right group p-2 -mr-2 rounded-lg hover:bg-[#f6f8fa] dark:hover:bg-[#161b22] transition-colors"
                   >
                     <span className="text-xs text-[#57606a] dark:text-[#8b949e] flex items-center gap-1 font-medium">
@@ -653,7 +697,13 @@ export default function App() {
                 Crifolayer TrustLayer Platform Documentation · © 2026.
               </div>
               <div className="flex gap-4">
-                <a href="#/" className="hover:underline">Home</a>
+                <a 
+                  href="/" 
+                  onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/'); }}
+                  className="hover:underline"
+                >
+                  Home
+                </a>
                 <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center gap-1">GitHub <ExternalLink className="w-3 h-3" /></a>
               </div>
             </footer>
@@ -672,7 +722,8 @@ export default function App() {
                   return (
                     <li key={header.id} style={{ paddingLeft: isH3 ? '12px' : '0px' }}>
                       <a
-                        href={`#/${currentDocId}#${header.id}`}
+                        href={`/${currentDocId}#${header.id}`}
+                        onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', `/${currentDocId}#${header.id}`); }}
                         className={`block py-1 -ml-px pl-3 border-l ${
                           isActive
                             ? 'text-[#0969da] dark:text-[#2f81f7] font-semibold border-l border-[#0969da] dark:border-[#2f81f7]'
@@ -720,7 +771,8 @@ export default function App() {
                       return (
                         <li key={item.id}>
                           <a
-                            href={`#/${item.id}`}
+                            href={`/${item.id}`}
+                            onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', `/${item.id}`); }}
                             className={`block py-1.5 text-sm rounded-md transition-colors ${
                               isActive
                                 ? 'text-[#0969da] dark:text-[#2f81f7] font-semibold -ml-3.5 pl-3 border-l-2 border-[#0969da] dark:border-[#2f81f7]'
@@ -856,7 +908,8 @@ function LandingPage() {
         {/* Actions */}
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-10">
           <a
-            href="#/introduction"
+            href="/introduction"
+            onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/introduction'); }}
             className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-lg bg-[#0969da] hover:bg-[#0550ae] dark:bg-[#2188ff] dark:hover:bg-[#1f6feb] text-white font-semibold shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5 group cursor-pointer"
           >
             Get Started
@@ -972,7 +1025,8 @@ function LandingPage() {
         <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Ready to secure your application?</h3>
         <p className="text-[#57606a] dark:text-[#8b949e] mt-2 mb-8 text-sm">Explore our integration blueprints, SDK methods, and API schemas.</p>
         <a
-          href="#/introduction"
+          href="/introduction"
+          onClick={(e) => { e.preventDefault(); window.history.pushState(null, '', '/introduction'); }}
           className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#0969da] hover:bg-[#0550ae] dark:bg-[#2188ff] dark:hover:bg-[#1f6feb] text-white font-semibold transition-all hover:-translate-y-0.5 cursor-pointer shadow-md hover:shadow-lg"
         >
           Explore Documentation
